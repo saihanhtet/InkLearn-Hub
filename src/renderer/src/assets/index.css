@@ -1,0 +1,544 @@
+:root {
+  --white: #fff;
+  --black: #2b2b2b;
+  --primary-color: rgb(37, 95, 133);
+  --secondary-color: #f8d388;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  /* outline: 1px dashed blue; */
+}
+b {
+  color: #4d4c4c;
+  word-spacing: 2.3px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+body {
+  font-family: monospace;
+  background-color: white !important;
+  color: var(--black);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.breadcrumb a {
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-item {
+  padding: 0px;
+}
+
+.dropdown-item a {
+  display: flex;
+  width: 100% !important;
+  text-decoration: none;
+}
+
+.card {
+  --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(37, 95, 133, 0.199);
+  box-shadow: var(--bs-box-shadow-sm) !important;
+}
+
+.status-cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-cards .card {
+  position: relative;
+  padding: 10px;
+  border-radius: 10px 0px 10px 0px;
+  border: 1px solid #0b2447;
+  font-size: 16px;
+  background: transparent;
+  outline: none;
+  box-shadow: 7px 7px 0px 0px #0b2447;
+  min-width: 230px !important;
+  max-width: 280px !important;
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-cards .card b {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.wrapper-container {
+  display: flex;
+  gap: 10px;
+  margin: 0px !important;
+  height: calc(100vh - 80px);
+}
+
+.navbar span {
+  color: var(--black) !important;
+}
+.nav-brand {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.nav-link {
+  color: var(--black) !important;
+}
+
+h4 {
+  font-size: 1.6em;
+}
+/* authenication style */
+.auth-card {
+  max-width: 800px;
+  text-align: left;
+  margin: 5px;
+}
+
+.auth-card .card-title h4 {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary-color);
+}
+
+.auth-card .card-footer {
+  border: 0 !important;
+  margin: 10px;
+}
+
+.auth-container {
+  height: calc(100vh - 100px);
+  border: 3px dashed var(--primary-color) !important;
+  border-radius: 15px;
+}
+
+/* sidebar style */
+.sidebar-container {
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between !important;
+  min-width: 260px !important;
+}
+.sidebar-list li {
+  margin-bottom: 10px;
+  transition: all 0.3s ease-in-out;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.sidebar-list li:hover,
+.sidebar-list a.active {
+  background-color: var(--secondary-color);
+}
+
+.sidebar-list li,
+.sidebar-list li a {
+  width: 100%;
+}
+.sidebar-list a span {
+  width: 70%;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-align: start;
+}
+.sidebar-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+}
+
+.sidebar-list i {
+  font-size: 19px;
+}
+/* Dashboard style */
+.dashboard-container {
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+/* subject style */
+.subj-container {
+  height: calc(100vh - 80px);
+}
+.subj-container span {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.bg-transparent {
+  background-color: transparent !important;
+}
+
+.form-group {
+  font-size: 1.25rem;
+  width: 100%;
+  padding: 0px 10px;
+  margin-bottom: 5px;
+}
+.outline-none {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+input[type='text'].form-control,
+input[type='number'].form-control,
+input[type='password'].form-control,
+input[type='search'].form-control,
+input[type='email'].form-control {
+  border: 0px;
+  border-radius: 0px;
+  border-bottom: 1px solid #686868 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-color: inherit !important;
+}
+.form-group label {
+  order: 1 !important;
+  display: block;
+  font-size: 15px;
+}
+.login-form {
+  width: 500px !important;
+  padding: 10px;
+}
+.text-bold {
+  font-weight: bold !important;
+  font-size: 15px;
+}
+.form-group input[type='text'],
+.form-group input[type='number'],
+.form-group input[type='password'],
+.form-group input[type='search'],
+.form-group input[type='email'] {
+  background-color: inherit;
+  order: 0 !important;
+  width: 100%;
+  letter-spacing: 1px;
+  font-weight: 500;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 0px;
+  transition: all 0.3s ease-in;
+}
+
+.form-group input[type='text']:focus,
+.form-group input[type='number']:focus,
+.form-group input[type='password']:focus,
+.form-group input[type='search']:focus,
+.form-group input[type='email']:focus {
+  background-color: inherit;
+  border-bottom: 1px solid #0059ff !important;
+}
+.form-group small {
+  color: #6c757d;
+}
+
+.form-group .errorlist {
+  color: #dc3545;
+  margin-top: 5px;
+  font-size: 13px !important;
+}
+
+.help_text,
+.form-text {
+  font-size: 13px !important;
+}
+
+.form-text ul {
+  padding: 0 5px;
+  margin: 0;
+  list-style: none !important;
+}
+
+/* User profile style  */
+.profile-container {
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.profile-container .profile-img {
+  width: 317px;
+  max-width: 317px;
+  min-width: 317px;
+  height: 317px;
+  min-height: 317px;
+  max-height: 317px;
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px dashed var(--primary-color);
+  object-fit: cover;
+  object-position: center;
+}
+/* Student creation style */
+.stud-modal-content {
+  overflow-y: auto !important;
+  height: 100vh;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/*  Table style */
+.table thead th {
+  font-weight: 500;
+  color: var(--black);
+}
+.wrapper {
+  margin-top: 5vh;
+}
+
+.dataTables_filter {
+  float: right;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: #ccffff;
+}
+
+@media only screen and (min-width: 768px) {
+  .table {
+    table-layout: fixed;
+    max-width: 100% !important;
+  }
+}
+
+thead {
+  background: #ddd;
+}
+
+.table td:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highlight {
+  background: #ffff99;
+}
+
+@media only screen and (max-width: 767px) {
+  /* Force display none the sidebar  */
+  .sidebar-container {
+    display: none !important;
+  }
+
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr,
+  tfoot tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50% !important;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  .table td:nth-child(1) {
+    background: #ccc;
+    height: 100%;
+    top: 0;
+    left: 0;
+    font-weight: 500;
+  }
+
+  /*
+  Label the data
+  */
+  td:nth-of-type(1):before {
+    content: 'ID';
+  }
+
+  td:last-child:before {
+    content: 'Action';
+  }
+
+  #student-list td:nth-of-type(2):before,
+  #subject-list td:nth-of-type(2):before {
+    content: 'Name';
+  }
+
+  #student-list td:nth-of-type(3):before {
+    content: 'Email';
+  }
+
+  #student-list td:nth-of-type(4):before {
+    content: 'Gender';
+  }
+  #subject-list td:nth-of-type(4):before {
+    content: 'Chapters';
+  }
+
+  #course-list td:nth-of-type(2):before,
+  #student-list td:nth-of-type(5):before,
+  #subject-list td:nth-of-type(3):before {
+    content: 'Course';
+  }
+
+  #course-list td:nth-of-type(3):before {
+    content: 'Total Student';
+  }
+
+  .dataTables_length {
+    display: none;
+  }
+  .dataTables_filter {
+    width: 100%;
+  }
+}
+
+/* loading style css */
+
+.loading {
+  width: 100vw;
+  height: 100vh;
+}
+
+.loader {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.catContainer {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.catbody {
+  width: 80px;
+}
+.tail {
+  position: absolute;
+  width: 17px;
+  top: 50%;
+  animation: tail 0.5s ease-in infinite alternate-reverse;
+  transform-origin: top;
+}
+@keyframes tail {
+  0% {
+    transform: rotateZ(60deg);
+  }
+  50% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(-20deg);
+  }
+}
+.wall {
+  width: 300px;
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  width: 50px;
+  position: absolute;
+  margin: 0px 0px 100px 120px;
+}
+.zzz {
+  color: black;
+  font-weight: 700;
+  font-size: 15px;
+  animation: zzz 2s linear infinite;
+}
+.bigzzz {
+  color: black;
+  font-weight: 700;
+  font-size: 25px;
+  margin-left: 10px;
+  animation: zzz 2.3s linear infinite;
+}
+@keyframes zzz {
+  0% {
+    color: transparent;
+  }
+  50% {
+    color: black;
+  }
+  100% {
+    color: transparent;
+  }
+}
