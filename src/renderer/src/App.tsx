@@ -31,8 +31,8 @@ function App(): JSX.Element {
         const auth_token_length = auth_token ? auth_token.length : 0
 
         if (auth_token !== 'undefined' && auth_token_length !== 0) {
-          const response = await checkToken()
-          if (response.status === 200) {
+          const { success, response } = await checkToken()
+          if (success) {
             console.log('session is still alive')
             setIsLoggedIn(true)
             navigate('/')

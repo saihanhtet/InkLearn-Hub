@@ -33,8 +33,6 @@ $ npm run build:mac
 $ npm run build:linux
 ```
 
-# from dev?
-
 <!--
 # add this to copy the py folder
 "build": {
