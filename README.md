@@ -33,9 +33,9 @@ $ npm run build:mac
 $ npm run build:linux
 ```
 
+<!--
 # add this to copy the py folder
-
-<!-- "build": {
+"build": {
     "extraResources": [
       {
         "from": "./python/dist/inkBackend",
