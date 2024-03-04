@@ -9,7 +9,6 @@ console.log('App path :', appPath)
 console.log('User data directory:', app.getPath('userData'))
 
 function createWindow(): void {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -39,20 +38,30 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-
-  // save cookies
-  const setCookies = async (name, value) => {
-    const cookie = { url: 'http://127.0.0.1:8000/', name: name, value: value }
-    try {
-      await mainWindow.webContents.session.cookies.set(cookie)
-      console.log('Cookie set successfully')
-    } catch (error) {
-      console.error('Error setting cookie:', error)
-    }
-  }
-
-  ipcMain.on('save-auth-token', (_, authToken) => {
-    setCookies('authToken', authToken)
+  // save cookies from response
+  ipcMain.on('save-cookies', () => {
+    mainWindow.webContents.session.cookies
+      .get({})
+      .then((cookies) => {
+        const serializedCookies = JSON.stringify(cookies)
+        mainWindow.webContents.send('set-cookies', serializedCookies)
+      })
+      .catch((error) => {
+        console.error('Error getting cookies:', error)
+      })
+  })
+  // clear cookies from response
+  ipcMain.on('clear-cookies', () => {
+    mainWindow.webContents.session
+      .clearStorageData({
+        storages: ['cookies']
+      })
+      .then(() => {
+        console.log('Cookies cleared successfully')
+      })
+      .catch((error) => {
+        console.error('Error clearing cookies:', error)
+      })
   })
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

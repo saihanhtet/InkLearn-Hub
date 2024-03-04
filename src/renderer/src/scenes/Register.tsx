@@ -1,6 +1,6 @@
 // Register.tsx
 import React, { useState } from 'react'
-import { registerUser } from '@renderer/client'
+import { registerFunction } from '@renderer/client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { Link, useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ const Register: React.FC<RegisterProps> = ({ setLoggedIn }) => {
   async function handleRegister(e): Promise<boolean> {
     e.preventDefault()
     try {
-      const { success, response } = await registerUser(username, email, password, secretKey)
+      const { success, response } = await registerFunction(username, email, password, secretKey)
       if (success) {
         console.log(response)
         setLoggedIn(true)

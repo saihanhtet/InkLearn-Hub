@@ -24,27 +24,27 @@ function App(): JSX.Element {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const checkSessionId = async () => {
       console.log('Checking session...')
       try {
-        const auth_token = localStorage.getItem('authToken')
-        const auth_token_length = auth_token ? auth_token.length : 0
-
-        if (auth_token !== 'undefined' && auth_token_length !== 0) {
-          const { success, response } = await checkToken()
-          if (success) {
-            console.log('session is still alive')
-            setIsLoggedIn(true)
-            navigate('/')
-          } else {
-            console.log('session is dead')
-            setIsLoggedIn(false)
-            navigate('/login')
-          }
+        const { success, response } = await checkToken()
+        if (success) {
+          console.log(response)
+          setIsLoggedIn(true)
+          navigate('/')
+        } else {
+          console.log('session is dead')
+          setIsLoggedIn(false)
+          navigate('/login')
         }
       } catch (error) {
-        console.error('Error checking session ID:', error)
+        // got to login page if error occurred while checking session
+        console.error('Error checking session:', error)
+        setIsLoggedIn(false)
+        navigate('/login')
       } finally {
+        console.log('end loading')
         setLoading(false)
       }
     }

@@ -1,6 +1,6 @@
 // Login.tsx
 import React, { useState } from 'react'
-import { loginUser } from '@renderer/client'
+import { loginFunction } from '@renderer/client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { Link, useNavigate } from 'react-router-dom'
@@ -17,7 +17,7 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
   async function handleLogin(e): Promise<boolean> {
     e.preventDefault()
     try {
-      const { success, response } = await loginUser(email, password)
+      const { success, response } = await loginFunction(email, password)
       if (success) {
         console.log(response)
         setLoggedIn(true)

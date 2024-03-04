@@ -5,21 +5,49 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 const requestClient = axios.create({
-  // baseURL: 'https://ink-backend.vercel.app/'
   baseURL: 'http://127.0.0.1:8000/'
 })
+
+interface LoginResponseData {
+  tokens: {
+    access: string
+  }
+  user: any
+  message: string
+}
+
+interface RegisterResponseData {
+  user: any
+  message: string
+}
+
+interface RequestFunctionResponse {
+  response: any
+  success: boolean
+}
 
 interface ApiResponse<T> {
   response: T
   success: boolean
 }
 
-function getToken() {
-  const token = localStorage.getItem('authToken')
-  if (!token) {
-    throw new Error('Authentication token not set')
+export function saveUserData(userData: JSON): void {
+  localStorage.setItem('userData', JSON.stringify(userData))
+}
+
+export function getToken(): string {
+  const cookiesJson = localStorage.getItem('cookies')
+  if (cookiesJson) {
+    const cookies = JSON.parse(cookiesJson)
+    const auth_token: string = cookies?.[1]?.value || ''
+    if (auth_token.length !== 0) {
+      return auth_token
+    } else {
+      return ''
+    }
+  } else {
+    return ''
   }
-  return token
 }
 
 function handleResponse<T>(res: AxiosResponse<T>): ApiResponse<T> {
@@ -30,97 +58,139 @@ function handleResponse<T>(res: AxiosResponse<T>): ApiResponse<T> {
   }
 }
 
-function handleError(error: any): ApiResponse<any> {
-  return { response: error.response, success: false }
+function handleError(error): string {
+  return (error as Error).message || 'An error occurred'
 }
 
-export function saveLoginData(tokens: any, userData: any): void {
+export function saveLoginData(tokens, userData): void {
   localStorage.setItem('authToken', tokens.access)
   localStorage.setItem('userData', JSON.stringify(userData))
 }
 
-export async function loginUser(
+export const loginFunction = async (
   email: string,
   password: string
-): Promise<ApiResponse<AxiosResponse>> {
+): Promise<RequestFunctionResponse> => {
   try {
-    const res = await requestClient.post('/api/login', { email, password })
-    const authToken = res.data.tokens
-    const userData = res.data.user
-
-    if (authToken) {
-      saveLoginData(authToken, userData)
-      window.electron.saveToken(authToken)
+    if (email === '' || password === '') {
+      throw new Error("Email and password can't be empty")
     }
 
-    return handleResponse(res)
+    const res: AxiosResponse<LoginResponseData> = await requestClient.post('/api/login', {
+      email,
+      password
+    })
+    // save the cookies in local storage
+    window.electron.saveCookies()
+
+    const { user, message } = res.data
+    if (user) {
+      saveUserData(user)
+    }
+
+    return { response: message, success: true }
   } catch (error) {
-    return handleError(error)
+    return { response: handleError(error), success: false }
   }
 }
 
-export async function registerUser(
+export const registerFunction = async (
   username: string,
   email: string,
   password: string,
-  secret_key: string
-): Promise<ApiResponse<AxiosResponse>> {
+  password2: string
+): Promise<RequestFunctionResponse> => {
   try {
-    const res = await requestClient.post('/api/register', { username, email, password, secret_key })
-
-    if (res.status === 201) {
-      await loginUser(email, password)
+    if (email === '' || password === '' || username === '') {
+      throw new Error("Email, Username, and Password can't be empty")
+    }
+    if (password !== password2) {
+      throw new Error('Both passwords must be the same.')
     }
 
-    return handleResponse(res)
+    const res: AxiosResponse<RegisterResponseData> = await requestClient.post('/api/register', {
+      username,
+      email,
+      password
+    })
+
+    const { user, message } = res.data
+
+    if (user) {
+      saveUserData(user)
+    }
+    await loginFunction(email, password)
+
+    return { response: message, success: true }
   } catch (error) {
-    return handleError(error)
+    return { response: handleError(error), success: false }
   }
 }
 
-export async function get(url: string): Promise<ApiResponse<AxiosResponse>> {
+export const get = async (url: string): Promise<RequestFunctionResponse> => {
   try {
     const token = getToken()
+    if (!token) {
+      throw new Error('Authentication token not set')
+    }
+
     const config: AxiosRequestConfig = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
+
     const res = await requestClient.get(url, config)
-    return handleResponse(res)
+
+    return { response: res.data, success: true }
   } catch (error) {
-    return handleError(error)
+    return { response: handleError(error), success: false }
   }
 }
 
-export async function post(url: string, data: JSON): Promise<ApiResponse<AxiosResponse>> {
+export const post = async (
+  url: string,
+  data: Record<string, any>
+): Promise<RequestFunctionResponse> => {
   try {
     const token = getToken()
+    if (!token) {
+      throw new Error('Authentication token not set')
+    }
+
     const config: AxiosRequestConfig = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
+
     const res = await requestClient.post(url, data, config)
-    return handleResponse(res)
+
+    return { response: res.data.message, success: true }
   } catch (error) {
-    return handleError(error)
+    return { response: handleError(error), success: false }
   }
 }
-export async function checkToken(): Promise<ApiResponse<AxiosResponse>> {
+
+// check token function method
+
+export async function checkToken(): Promise<RequestFunctionResponse> {
   try {
     const token = getToken()
+    if (!token) {
+      throw new Error('Authentication token not set')
+    }
+
     const config: AxiosRequestConfig = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
     const res = await requestClient.get('/api/check-token', config)
-    window.electron.saveToken(token)
-    console.log(res)
-    return handleResponse(res)
+
+    return { response: res.data.message, success: true }
   } catch (error) {
-    return handleError(error)
+    return { response: handleError(error), success: false }
   }
 }
 
@@ -129,7 +199,8 @@ export async function logoutUser(): Promise<ApiResponse<string>> {
     .post('/api/logout')
     .then((res) => {
       if (res.status === 200) {
-        localStorage.removeItem('authToken')
+        localStorage.clear()
+        window.electron.clearCookies()
         return { response: 'Logout successful', success: true }
       } else {
         return { response: 'Error occurred during logout', success: false }
@@ -144,7 +215,7 @@ export const getDetails = async (): Promise<any> => {
   try {
     const { success, response } = await get('/api/user')
     if (success) {
-      return response.data.user
+      return response.user
     }
   } catch (err) {
     console.log('Error occurred while getting credentials:', err)

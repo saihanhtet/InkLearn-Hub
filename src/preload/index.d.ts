@@ -1,7 +1,8 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
 interface ExtendedElectronAPI extends ElectronAPI {
-  saveToken: (authToken: any) => void
+  saveCookies: () => void
+  clearCookies: () => void
 }
 
 declare global {
