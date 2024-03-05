@@ -1,25 +1,23 @@
-// Register.tsx
+// Login.tsx
 import React, { useState } from 'react'
-import { registerFunction } from '@renderer/client'
+import { loginFunction } from '@renderer/utils/client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { Link, useNavigate } from 'react-router-dom'
 
-interface RegisterProps {
+interface LoginProps {
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Register: React.FC<RegisterProps> = ({ setLoggedIn }) => {
+const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [secretKey, setSecretKey] = useState('')
 
-  async function handleRegister(e): Promise<boolean> {
+  async function handleLogin(e): Promise<boolean> {
     e.preventDefault()
     try {
-      const { success, response } = await registerFunction(username, email, password, secretKey)
+      const { success, response } = await loginFunction(email, password)
       if (success) {
         console.log(response)
         setLoggedIn(true)
@@ -31,7 +29,7 @@ const Register: React.FC<RegisterProps> = ({ setLoggedIn }) => {
         return false
       }
     } catch (error) {
-      console.error('Error during register:', error)
+      console.error('Error during login:', error)
       return false
     }
   }
@@ -41,20 +39,8 @@ const Register: React.FC<RegisterProps> = ({ setLoggedIn }) => {
               p-3 w-100 h-100
               d-flex justify-content-center align-items-center"
     >
-      <Form onSubmit={(e) => handleRegister(e)} className="login-form shadow-sm rounded p-5">
-        <h5 className="text-start mb-3">Sign up Form</h5>
-        <Form.Group className="mb-3" controlId="formBasicUsername">
-          <Form.Label className="text-bold">Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Form.Text className="text-muted">
-            We&apos;ll never share your email with anyone else.
-          </Form.Text>
-        </Form.Group>
+      <Form onSubmit={(e) => handleLogin(e)} className="login-form shadow-sm rounded p-5">
+        <h5 className="text-start mb-3">Login Form</h5>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label className="text-bold">Email address</Form.Label>
           <Form.Control
@@ -71,30 +57,21 @@ const Register: React.FC<RegisterProps> = ({ setLoggedIn }) => {
           <Form.Label className="text-bold">Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Set Password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicSecretKey">
-          <Form.Label className="text-bold">Secret Key</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter secret key"
-            value={secretKey}
-            onChange={(e) => setSecretKey(e.target.value)}
-          />
-        </Form.Group>
-        <Link to="/login" className="mb-3 text-decoration-none text-danger text-bold">
+        <Link to="/register" className="mb-3 text-decoration-none text-danger text-bold">
           {' '}
-          Already an User?
+          Don&apos;t have an account?
         </Link>
         <Button variant="primary" type="submit" className="w-100 mt-3">
-          Sign Up
+          Log In
         </Button>
       </Form>
     </div>
   )
 }
 
-export default Register
+export default Login

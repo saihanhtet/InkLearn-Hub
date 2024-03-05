@@ -142,7 +142,7 @@ export const get = async (url: string): Promise<RequestFunctionResponse> => {
 
     const res = await requestClient.get(url, config)
 
-    return { response: res.data, success: true }
+    return { response: res, success: true }
   } catch (error) {
     return { response: handleError(error), success: false }
   }
@@ -215,7 +215,7 @@ export const getDetails = async (): Promise<any> => {
   try {
     const { success, response } = await get('/api/user')
     if (success) {
-      return response.user
+      return response.data.user
     }
   } catch (err) {
     console.log('Error occurred while getting credentials:', err)

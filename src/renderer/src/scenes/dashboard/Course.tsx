@@ -1,20 +1,25 @@
-import { get, getDetails, post } from '@renderer/client'
+import { get, getDetails, post } from '@renderer/utils/client'
 import { useState, useEffect, FormEvent } from 'react'
 import { Breadcrumb } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import { CourseTable } from '@renderer/components/Table'
+
+interface Course {
+  id: number
+  course_name: string
+}
 
 function Course(): JSX.Element {
-  const [coursesData, setCoursesData] = useState([])
+  const [coursesData, setCoursesData] = useState<Course[]>([])
   const [courseName, setCourseName] = useState('')
-  const [coursePrice, setCoursePrice] = useState('')
   const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleClose = (): void => setShow(false)
+  const handleShow = (): void => setShow(true)
   const [isAdmin, setIsAdmin] = useState(false)
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     try {
       const userDetails = await getDetails()
       if (userDetails) {
@@ -23,13 +28,14 @@ function Course(): JSX.Element {
       const { success, response } = await get('/api/course')
       if (success) {
         setCoursesData(response.data.courses)
-        const currentHash = window.location.hash
-        console.log(currentHash)
+        // const currentHash = window.location.hash
+        // console.log(currentHash)
       }
     } catch (err) {
       console.log('Error occurred while getting credentials:', err)
     }
   }
+
   useEffect(() => {
     fetchData()
   }, [])
@@ -41,8 +47,7 @@ function Course(): JSX.Element {
     }
     try {
       const { success } = await post('/api/course', {
-        course_name: courseName,
-        price: coursePrice
+        course_name: courseName
       })
       if (success) {
         setShow(false)
@@ -52,6 +57,16 @@ function Course(): JSX.Element {
     } catch (err) {
       console.log('Error occurred while adding course:', err)
     }
+  }
+
+  const editFunction = (id: number): void => {
+    // Implement your edit functionality here
+    console.log(`Editing course with ID ${id}`)
+  }
+
+  const deleteFunction = (id: number): void => {
+    // Implement your delete functionality here
+    console.log(`Deleting course with ID ${id}`)
   }
 
   return (
@@ -65,6 +80,7 @@ function Course(): JSX.Element {
             Course Management
           </h5>
           <Breadcrumb>
+            <Breadcrumb.Item href="/">Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item href="/" active>
               Course
             </Breadcrumb.Item>
@@ -86,8 +102,7 @@ function Course(): JSX.Element {
         </div>
       </div>
       <hr />
-
-      <div className="status-cards w-100">
+      {/* <div className="status-cards w-100">
         {coursesData.length === 0 ? (
           <b className="text-muted">No courses available.</b>
         ) : (
@@ -103,8 +118,11 @@ function Course(): JSX.Element {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
       <hr />
+      <div className="scrollable-widget height-fixed">
+        <CourseTable data={coursesData} onEdit={editFunction} onDelete={deleteFunction} />
+      </div>
 
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={(e) => handleAdd(e)}>
@@ -124,7 +142,7 @@ function Course(): JSX.Element {
                 The course name should be at least 3 characters.
               </Form.Text>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCoursePrice">
+            {/* <Form.Group className="mb-3" controlId="formBasicCoursePrice">
               <Form.Label className="text-bold">Course Price</Form.Label>
               <Form.Control
                 type="number"
@@ -132,7 +150,7 @@ function Course(): JSX.Element {
                 value={coursePrice}
                 onChange={(e) => setCoursePrice(e.target.value)}
               />
-            </Form.Group>
+            </Form.Group> */}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

@@ -3,6 +3,11 @@
   --black: #2b2b2b;
   --primary-color: rgb(37, 95, 133);
   --secondary-color: #f8d388;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 * {
@@ -37,6 +42,17 @@ body {
   font-style: normal;
 }
 
+.scrollable-widget {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.height-fixed {
+  max-height: 450px !important;
+  height: 100%;
+}
+
 .breadcrumb a {
   display: block;
   text-decoration: none;
@@ -55,6 +71,12 @@ body {
 .card {
   --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(37, 95, 133, 0.199);
   box-shadow: var(--bs-box-shadow-sm) !important;
+}
+.table thead th:first-child {
+  width: 60px !important;
+}
+.table thead th:last-child {
+  width: 100px !important;
 }
 
 .status-cards {

@@ -1,5 +1,5 @@
 // Logout.tsx
-import { logoutUser } from '@renderer/client'
+import { logoutUser } from '@renderer/utils/client'
 import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
