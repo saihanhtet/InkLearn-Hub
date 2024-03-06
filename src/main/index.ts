@@ -1,14 +1,67 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
+const kill = require('tree-kill')
+
+let BACKEND_PROCESS: ChildProcessWithoutNullStreams
+let serverStartedCallback: (() => void) | null = null
+
+const isDevelopmentEnv = (): boolean => {
+  return process.env.NODE_ENV === 'development'
+}
+
 const appPath = app.getAppPath()
+const userDataPath = app.getPath('userData')
+
+const spawnDjango = (): ChildProcessWithoutNullStreams => {
+  const djangoArgs = isDevelopmentEnv()
+    ? ['python\\inkBackend\\manage.py', 'runserver', '--noreload']
+    : ['inkBackend.exe', 'runserver', '--noreload']
+  console.log(djangoArgs)
+
+  const spawnOptions = {
+    cwd: isDevelopmentEnv() ? appPath : userDataPath,
+    shell: true
+  }
+
+  return spawn('python', djangoArgs, spawnOptions)
+}
+
+const startBackendServer = () => {
+  BACKEND_PROCESS = spawnDjango()
+  BACKEND_PROCESS.stdout.on('data', (data) => {
+    console.log(`stdout:\n${data}`)
+    if (data.includes('Starting development server')) {
+      if (serverStartedCallback) {
+        serverStartedCallback()
+        serverStartedCallback = null
+      }
+    }
+  })
+
+  BACKEND_PROCESS.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`)
+  })
+
+  BACKEND_PROCESS.on('error', (error) => {
+    console.error(`error: ${error.message}`)
+  })
+
+  BACKEND_PROCESS.on('close', (code) => {
+    console.log(`child process exited with code ${code}`)
+  })
+
+  return BACKEND_PROCESS
+}
 console.log('App path :', appPath)
 console.log('User data directory:', app.getPath('userData'))
 
 function createWindow(): void {
+  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -71,14 +124,22 @@ function createWindow(): void {
   }
 }
 
+app.on('before-quit', async () => {
+  kill(BACKEND_PROCESS.pid)
+})
+
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+  // start the backend
+  startBackendServer()
+  // show the port running on
+  console.log('Spawn on port: ', BACKEND_PROCESS.pid)
 
-  createWindow()
+  serverStartedCallback = createWindow
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -89,4 +150,6 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+  console.log('Ending our backend server.')
+  kill(BACKEND_PROCESS.pid)
 })
