@@ -18,17 +18,23 @@ const appPath = app.getAppPath()
 const userDataPath = app.getPath('userData')
 
 const spawnDjango = (): ChildProcessWithoutNullStreams => {
+  const pythonPath = isDevelopmentEnv()
+    ? path.join(appPath, 'venv', process.platform === 'win32' ? 'Scripts' : 'bin', 'python3')
+    : path.join(userDataPath, 'venv', process.platform === 'win32' ? 'Scripts' : 'bin', 'python3')
+
   const djangoArgs = isDevelopmentEnv()
-    ? ['python\\inkBackend\\manage.py', 'runserver', '--noreload']
+    ? [path.join('python', 'inkBackend', 'manage.py'), 'runserver', '--noreload']
     : ['inkBackend.exe', 'runserver', '--noreload']
-  console.log(djangoArgs)
+
+  console.log('Python path:', pythonPath)
+  console.log('Django args:', djangoArgs)
 
   const spawnOptions = {
     cwd: isDevelopmentEnv() ? appPath : userDataPath,
     shell: true
   }
 
-  return spawn('python', djangoArgs, spawnOptions)
+  return spawn(pythonPath, djangoArgs, spawnOptions)
 }
 
 const startBackendServer = () => {
